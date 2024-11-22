@@ -30,4 +30,6 @@ route::get ("scan/{id}", [ScanController::class,"show"]);
 Route::post("scan", [ScanController::class,"store"]);
 
 route::put ("scan/{id}", [ScanController::class,"update"]);
+
+route::delete ("scan/{id}", [ScanController::class,"destroy"]);
 });

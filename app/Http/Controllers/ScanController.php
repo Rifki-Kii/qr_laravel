@@ -132,6 +132,28 @@ class ScanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $scan = Scan::find($id);
+
+        if( $scan == null ) {
+            return response()->json([
+                "status"=> "error",
+                "massage"=> "scan not found",
+                "data"=> []
+            ], 200  );
     }
+
+    $result = $scan->delete();
+    if( $result){
+        return response()->json([
+            "status"=> "success",
+            "message"=> "Delete data succes",
+            "data"=> []
+        ], 200);
+    } else {
+        return response()->json([
+            "status"=> "error",
+            "message"=> "Delete data Failed"
+        ], 200);
+    }
+}
 }
