@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 Route::prefix("participant")->name("participant")->group(function () {
     Route::get("/register", [ParticipantController::class, "register"])->name('.register');
+    Route::post('/register',[ParticipantController::class,'Register_store']);
 });
+
 
 

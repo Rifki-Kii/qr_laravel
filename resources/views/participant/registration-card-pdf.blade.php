@@ -5,37 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ID Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 68pt;
+            margin-bottom: 20px;
+        }
+        .qr-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            margin-top: 60px;
+            width: 100%;
+            font-size: 15pt;
+            border-collapse: collapse;
+        }
+        td {
+            padding: 5px;
+        }
+        td:first-child {
+            width: 20%;
+        }
+        td:nth-child(2) {
+            width: 20%;
+        }
+        td:last-child {
+            width: 60%;
+        }
+    </style>
 </head>
-<style>
-    h1 {
-        text-align: center
-    }
-</style>
+
 <body>
-<div>
-    <h1 style="font-size:68pt" >Meet AP</h1>
-    <div class="text-align: center;">
-        <img style="" width="150px" src="data:image/png;base64, {{ $qr_code }}"
-        alt="">
+    <h1>Meet AP</h1>
+    <div class="qr-container">
+        <!-- Tampilkan QR code -->
+        <img src="data:image/png;base64,{{ $qr_code }}" alt="" width="150px">
     </div>
 
-    <table style="margin-top:60px; width:100% font-size:15pt">
+    <table>
         <tr>
-            <td style="width:20%">&nbsp;</td>
-            <td style="width:20%"> Nama</td>
-            <td style="width : 60%">{{ $participant->name }}</td>
+            <td></td>
+            <td>Nama</td>
+            <td>{{ $participant->name }}</td>
         </tr>
         <tr>
-            <td>&nbsp;</td>
+            <td></td>
             <td>Email</td>
-            <td>{{ $participant->phone }}</td>
+            <td>{{ $participant->email }}</td>
         </tr>
         <tr>
-            <td>&nbsp;</td>
-            <td>Phone</td>
+            <td></td>
+            <td>No Hp</td>
             <td>{{ $participant->phone }}</td>
         </tr>
     </table>
-</div>
 </body>
 </html>
