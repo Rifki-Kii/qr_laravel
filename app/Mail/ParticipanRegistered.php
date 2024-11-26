@@ -7,47 +7,32 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use illuminate\Mail\Mailable\attachments;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Address;
 
 class ParticipanRegistered extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    use Queueable, SerializesModels;
     public $participant;
-    public $qrCode;
+    public $qr_code;
     public $path;
-
-
 
     public function __construct($participant, $qr_code = null, $path = null)
     {
         $this->participant = $participant;
-        $this->qrCode = $qr_code;
+        $this->qr_code = $qr_code;
         $this->path = $path;
-
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
-{
-    return new Envelope(
-        from: new Address("noreply@meetap.com", "MeetAp mail"),
-        subject: "Register Participant",
-    );
-}
+    {
+        return new Envelope(
+            from: new Address("noreply@meetap.com", "MeetAp mail"),
+            subject: "Register Participant",
+        );
+    }
 
-
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
@@ -55,22 +40,15 @@ class ParticipanRegistered extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-
-             public function attachments(): array
-         {
-            if ($this->path == null) {
-              return [];
-
-            } else {
-                return [
-                    Attachment::fromPath($this->path),
-                ];
+    public function attachments(): array
+    {
+        if ($this->path !== null) {
+            return [
+                Attachment::fromPath($this->path),
+            ];
         }
-
+        return [];
     }
 }
+
+

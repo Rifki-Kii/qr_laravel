@@ -46,6 +46,7 @@
     <div class="qr-container">
         <!-- Tampilkan QR code -->
         <img src="data:image/png;base64,{{ $qr_code }}" alt="" width="150px">
+
     </div>
 
     <table>

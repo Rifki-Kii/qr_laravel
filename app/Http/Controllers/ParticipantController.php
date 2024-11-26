@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ParticipanRegistered;
-use App\Mail\ParticipantRegistered;  // Corrected namespace and class name
+use App\Mail\ParticipanRegistered; // Corrected namespace and class name
 use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -11,6 +10,7 @@ use Milon\Barcode\DNS2D;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\Facade;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class ParticipantController extends Controller
 {
@@ -48,24 +48,25 @@ class ParticipantController extends Controller
         // Generate QR code using DNS2D
         $barcode = new DNS2D();
         $qr_code = $barcode->getBarcodePNG($qr_content, 'QRCODE', 100, 100, [0, 0, 0], true);
-   
+
+
 
         // Create the PDF from the view
         $pdf = Pdf::loadHTML(view("participant.registration-card-pdf", compact("background", "qr_code", "participant")));
-        $pdf->setOption("is_Remote_Enabled", true);  // Enable remote assets (like images)
+        $pdf->setOption("is_remote_enabled", true); // Enable remote assets (like images)
         $pdf->setPaper("a5", "portrait");
 
         // Create directory if it doesn't exist
 
-        if (!is_dir(public_path("uploads/id_cards/"))) {
-            mkdir(public_path(("uploads/id_cards/")), 0777, true);
+        if (!is_dir(public_path("uploads/id_cards"))) {
+            mkdir(public_path(("uploads/id_cards")), 0777, true);
         }
 
         // Save the generated PDF to the file system
-    $pdf->save(public_path("uploads/id_cards/". $qr_content . ".pdf"));
+    $pdf->save(public_path("uploads/id_cards". $qr_content . ".pdf"));
 
         // Send the email with the attached PDF
-        Mail::to($participant->email)->send(new ParticipanRegistered($participant, null, public_path("uploads/id_cards/". $qr_content . ".pdf")));
+        Mail::to($participant->email)->send(new ParticipanRegistered($participant, null, public_path("uploads/id_cards". $qr_content . ".pdf")));
 
         // Return a response indicating success
         return redirect("/participant/register")->with('status', 'Data berhasil disimpan, silakan cek email Anda.');
