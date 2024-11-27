@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
+use App\Models\participant;
 use App\Models\Scan;
 use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Validation\Validator as IlluminateValidationValidator;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class ScanController extends Controller
 {
+
     /**
+     *
      * Display a listing of the resource.
      */
     public function index()
@@ -154,6 +161,74 @@ class ScanController extends Controller
             "status"=> "error",
             "message"=> "Delete data Failed"
         ], 200);
+    }
+}
+public function scan_qr(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'id_scan' => 'required',
+        'qr_content' => 'required',
+    ]);
+
+    // Periksa autentikasi pengguna
+    $user = Auth::user();
+
+    // Periksa apakah ID Scan valid
+    $is_id_scan = Scan::find($request->id_scan);
+
+    if (!$is_id_scan) {
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'Id Scan not found',
+            'error' => ['id_scan' => 'Not found']
+        ], 404);
+    }
+
+    // Periksa apakah QR Content valid
+    $is_participant = Participant::where("qr_content", $request->qr_content)->first();
+
+    if (!$is_participant) {
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'Participant not found',
+            'error' => ['qr_content' => 'Not found']
+        ], 404);
+    }
+
+    // Periksa apakah sudah melakukan scan hari ini
+    $today = now()->startOfDay();
+    $alreadyScan = Attendance::where("participant_id", $is_participant->id)
+        ->where("id_scan", $is_id_scan->id)
+        ->whereDate("scan_at", $today)
+        ->first();
+
+    if ($alreadyScan) {
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'Anda sudah scan hari ini'
+        ], 200);
+    }
+
+    // Simpan data scan baru
+    $attendance = new Attendance();
+    $attendance->participant_id = $is_participant->id;
+    $attendance->id_scan = $is_id_scan->id;
+    $attendance->scan_at = now();
+    $attendance->scan_by = $user->id;
+
+    $attendance->save();
+
+    if ($attendance) {
+        return response()->json([
+            'status' => 'success',
+            'message' => $is_id_scan->title . " - " . $request->qr_content . " success",
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'Error when saving data',
+        ], 422);
     }
 }
 }

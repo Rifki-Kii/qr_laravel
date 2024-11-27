@@ -36,7 +36,7 @@ class ParticipantController extends Controller
         $participant->phone = $request->phone;
 
         // Generate unique QR code content
-        $qr_content = "meetap- " . time();
+        $qr_content = "meetap-" . time();
         $participant->qr_content = $qr_content;
 
         // Save the participant to the database

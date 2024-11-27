@@ -8,21 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
     use HasFactory;
-    protected $table = "participants";
+
+    // Tabel yang digunakan oleh model ini
+    protected $table = "attendances";
+
+    // Kolom-kolom yang dapat diisi secara mass-assignment
     protected $fillable = [
         "participant_id",
         "id_scan",
         "scan_at",
-        "scan_by.",
+        "scan_by",
     ];
 
-    public function participant(){
+    // Relasi ke tabel participants
+    public function participant()
+    {
         return $this->belongsTo(Participant::class, "participant_id", "id");
     }
 
-    public function scan(){
-    return $this->belongTo(Scan::class, foreign: "id_can", ownerkey:"id");
+    // Relasi ke tabel scans
+    public function scan()
+    {
+        return $this->belongsTo(Scan::class, "id_scan", "id");
     }
+
+
 }
-
-

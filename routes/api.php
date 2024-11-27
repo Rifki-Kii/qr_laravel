@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\ApiReportController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ScanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +34,8 @@ Route::post("scan", [ScanController::class,"store"]);
 route::put ("scan/{id}", [ScanController::class,"update"]);
 
 route::delete ("scan/{id}", [ScanController::class,"destroy"]);
+
+Route::post("scan_qr", [ScanController::class,"scan_qr"]);
+
+Route::post("report", [ReportController::class,"index"]);
 });
